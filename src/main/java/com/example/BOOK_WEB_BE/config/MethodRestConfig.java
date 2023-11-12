@@ -12,7 +12,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 @Configuration
 public class MethodRestConfig implements RepositoryRestConfigurer {
-    private String url="http://localhost:8080";
+    private String url="http://localhost:3000";
 
     @Autowired
     private EntityManager entityManager;
@@ -29,6 +29,11 @@ public class MethodRestConfig implements RepositoryRestConfigurer {
 
         disableHttpMethods(TheLoai.class, config, chanCacPhuongThuc);
 
+
+        // CORS configuration
+        cors.addMapping("/**")
+                .allowedOrigins(url)
+                .allowedMethods("GET", "POST", "PUT", "DELETE");
         // Chặn các method DELETE
         HttpMethod[] phuongThucDelete = {
                 HttpMethod.DELETE
