@@ -6,10 +6,13 @@ import com.example.BOOK_WEB_BE.entity.NguoiDung;
 import com.example.BOOK_WEB_BE.entity.ThongBao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TaiKhoanService {
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
      @Autowired
      private NguoiDungRepository nguoiDungRepository;
 
@@ -23,6 +26,10 @@ public class TaiKhoanService {
         if(nguoiDungRepository.existsByEmail(nguoiDung.getEmail())){
             return ResponseEntity.badRequest().body(new ThongBao("Email đã tồn tại."));
         }
+
+        // Mã hóa mật khẩu
+        String encryptPassword = passwordEncoder.encode(nguoiDung.getMatKhau());
+        nguoiDung.setMatKhau(encryptPassword);
 
         // Lưu người dùng người dùng vào DB
         NguoiDung nguoiDung_daDangKy = nguoiDungRepository.save(nguoiDung);
